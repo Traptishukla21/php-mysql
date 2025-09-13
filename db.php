@@ -1,12 +1,15 @@
 <?php
-$host = getenv('DB_HOST') ?: 'localhost';
-$user = getenv('DB_USER') ?: 'root';
-$pass = getenv('DB_PASS') ?: '';
-$db   = getenv('DB_NAME') ?: 'testdb';
+$servername = "mydb.cji2omcuq031.ap-south-1.rds.amazonaws.com";
+$username = "admin";
+$password = "#1357911shukla";
+$dbname = "testdb";
 
-$conn = new mysqli($host, $user, $pass, $db);
+// Create connection
+$conn = new mysqli($servername, $username, $password, $dbname);
 
+// Check connection
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 ?>
+
