@@ -1,0 +1,32 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Checkout Code') {
+            steps {
+                git branch: 'main',
+                    url: 'https://github.com/Traptishukla21/php-mysql.git'
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                sh 'docker build -t php-mysql-app .'
+            }
+        }
+
+        stage('Deploy on EC2') {
+            steps {
+                withCredentials([sshUserPrivateKey(credentialsId: 'ec2-ssh', keyFileVariable: 'SSH_KEY')]) {
+                    sh '''
+                        ssh -o StrictHostKeyChecking=no -i $SSH_KEY ubuntu@13.233.215.245 '
+                            docker stop php-mysql-app || true &&
+                            docker rm php-mysql-app || true &&
+                            docker run -d -p 80:80 --name php-mysql-app php-mysql-app
+                        '
+                    '''
+                }
+            }
+        }
+    }
+}
